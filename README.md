@@ -11,8 +11,8 @@
     - [Nelua](#nelua)
     - [Ruby](#ruby)
     - [Zig](#zig)
+    - [Python](#python)
     - [LuaJIT (WIP)](#luajit-wip)
-    - [Python (WIP)](#python-wip)
     - [C3 (WIP)](#c3-wip)
     - [Odin (WIP)](#odin-wip)
 
@@ -228,21 +228,15 @@ raywars/src/zig
    LD_LIBRARY_PATH=../../../libs/linux/raylib/lib make run
    ```
 
-
-#####  LuaJIT (WIP)
-
----
-
-raywars.lua
-
-#####  Python (WIP)
+#####  Python 
 
 ---
 
 ```sh
-pip install raylib==5.5.0.3
-pip install --upgrade cffi
+pip3 install raylib==5.5.0.3 --break-system-packages
 ```
+
+(https://github.com/electronstudio/raylib-python-cffi)
 
 ```sh
 pwd 
@@ -250,6 +244,13 @@ raywars/src/python
 
 python raywars.py
 ```
+
+#####  LuaJIT (WIP)
+
+---
+
+raywars.lua
+
 
 #####  C3 (WIP)
 
