@@ -1,0 +1,48 @@
+const std = @import("std");
+const builtin = @import("builtin");
+
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    const raylib = "raylib";
+    const exe = b.addExecutable(.{
+        .name = "raywars",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/raywars.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{.name = raylib, .module = b.lazyDependency(raylib, .{}).?.module(raylib)},
+            },
+        }),
+    });
+
+    // for root_module
+    exe.root_module.link_libc = true;
+
+    // Hide console window
+    //exe.subsystem = .Windows;
+
+    b.installArtifact(exe);
+
+    // for Dynamic link
+    //switch (builtin.target.os.tag) {
+    //    .windows => {
+    //        const raylib_lib_win_dir = "../../../libs/win/raylib/lib";
+    //        const dll = "/raylib.dll";
+    //        const res = b.addInstallFile(b.path(raylib_lib_win_dir ++ dll), "bin" ++ dll);
+    //        b.getInstallStep().dependOn(&res.step);
+    //    },
+    //    .linux => {},
+    //    else => {},
+    //}
+
+    const run_step = b.step("run", "Run the app");
+    const run_cmd = b.addRunArtifact(exe);
+    run_step.dependOn(&run_cmd.step);
+    run_cmd.step.dependOn(b.getInstallStep());
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
+    }
+}

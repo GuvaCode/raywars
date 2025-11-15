@@ -1,3 +1,16 @@
+err.txt
+.neluacache/
+futhark/
+*.org
+.zig-cache/
+zig-out/
+*.mp4
+cdev/
+dev/
+README.html
+org.html
+.nimcache/
+nimcache/
 libs/win/
 libs/linux/
 # Prerequisites

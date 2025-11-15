@@ -1,0 +1,13 @@
+
+-I../../libs/win/raylib/include
+-I../../libs/linux/raylib/include
+
+
+
+# See
+# clangdで別ディレクトリのヘッダーを指定したい
+#  https://qiita.com/sudo00/items/99d9619de38574830f65
+#
+# Compiledb
+#  https://github.com/nickdiego/compiledb
+#    $ compiledb make

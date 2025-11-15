@@ -1,27 +1,60 @@
 TARGET = raywars
 
+CC = gcc
+#CC = zig cc
+#CC = clang
+
+CFLAGS += -O2
+
+STATIC_LINK_RAYLIB = true
+
+ifeq ($(STATIC_LINK_RAYLIB),true)
+	LIB_RAYLIB = -lraylib
+else
+	LIB_RAYLIB = -lraylibdll
+endif
+
+LIBS_DIR = ../../../libs
+LDFLAGS += -L$(LIBS_DIR)/$(PLATFORM)/raylib/lib
+
+# Strip debug info
+LDFLAGS += -Wl,-s
+
+ifeq ($(STATIC_LINK_RAYLIB),true)
+	LDFLAGS += -static
+endif
+
 ifeq ($(OS),Windows_NT)
 	EXE = .exe
 	# Hide conlosle
 	#LDFLAGS += -mwindows
-	LDFLAGS += -lopengl32 -lgdi32 -lwinmm -lraylibdll
+	LDFLAGS += $(LIB_RAYLIB) -lopengl32 -lgdi32 -lwinmm
 	PLATFORM = win
 else
 	PLATFORM = linux
-	LDFLAGS += -lraylib
+	LDFLAGS += $(LIB_RAYLIB)
 endif
 
-CFLAGS  += -I../../libs/$(PLATFORM)/raylib/include
-LDFLAGS += -L../../libs/$(PLATFORM)/raylib/lib
+CFLAGS  += -I$(LIBS_DIR)/$(PLATFORM)/raylib/include
 
-all:
-	gcc -O2 $(CFLAGS) $(TARGET).c -o $(TARGET)$(EXE) $(LDFLAGS)
-ifeq ($(OS),Windows_NT)
-	cp -f ../../libs/win/raylib/lib/raylib.dll .
+all: $(TARGET)$(EXE)
+
+$(TARGET)$(EXE): $(TARGET).c Makefile
+	$(CC) $(CFLAGS) $(TARGET).c -o $(TARGET)$(EXE) $(LDFLAGS)
+ifneq ($(STATIC_LINK_RAYLIB),true)
+ifeq ($(PLATFORM),win)
+	cp -f $(LIBS_DIR)/win/raylib/lib/raylib.dll .
+endif
 endif
 
 run: all
 	./$(TARGET)$(EXE)
 
 clean:
-	@-rm $(TARGET)$(EXE)
+	@-rm -f $(TARGET)$(EXE)
+ifeq ($(PLATFORM),win)
+	@-rm -f raylib.dll
+endif
+
+fmt:
+	clang-format -i $(TARGET).c
